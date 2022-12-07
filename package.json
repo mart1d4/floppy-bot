@@ -1,0 +1,29 @@
+{
+    "name": "floppy",
+    "version": "0.1.0",
+    "description": "A nice Discord bot",
+    "main": "index.js",
+    "scripts": {
+        "dev": "nodemon index.js",
+        "start": "node index.js",
+        "addCommands": "node addCommands.js ; npm run dev"
+    },
+    "keywords": [
+        "Discord",
+        "Bot",
+        "Floppy",
+        "Moderation",
+        "Fun",
+        "Music",
+        "Commands"
+    ],
+    "author": {
+        "name": "Martin Danton",
+        "email": "mart1danton@gmail.com"
+    },
+    "license": "ISC",
+    "dependencies": {
+        "discord.js": "^14.7.1",
+        "dotenv": "^16.0.3"
+    }
+}
