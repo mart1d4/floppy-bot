@@ -1,12 +1,12 @@
 {
-    "name": "floppy",
+    "name": "floppy-bot",
     "version": "0.1.0",
     "description": "A nice Discord bot",
     "main": "index.js",
     "scripts": {
         "dev": "nodemon index.js",
         "start": "node index.js",
-        "addCommands": "node addCommands.js ; npm run dev"
+        "addCommands": "node addCommands.js"
     },
     "keywords": [
         "Discord",
@@ -19,7 +19,8 @@
     ],
     "author": {
         "name": "Martin Danton",
-        "email": "mart1danton@gmail.com"
+        "email": "contact@mart1d4.com",
+        "url": "https://mart1d4.com/"
     },
     "license": "ISC",
     "dependencies": {

@@ -2,7 +2,7 @@ require('dotenv').config();
 const { REST, Routes } = require('discord.js');
 const fs = require('node:fs');
 
-const commandsToDelete = ['1049457331299172422'];
+const commandsToDelete = [];
 
 const commands = [];
 const commandFiles = fs

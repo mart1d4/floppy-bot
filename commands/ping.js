@@ -1,36 +1,29 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const client = require('../index.js').client;
 
 const data = new SlashCommandBuilder()
     .setName('ping')
     .setDescription("Displays the bot's latency");
 
 const execute = async (interaction) => {
+    const channel = interaction.channel;
+
     const sent = await interaction.reply({
-        embeds: [
-            new EmbedBuilder()
-                .setTitle('Pinging...')
-                .setTimestamp()
-                .setColor('0x5E81AC'),
-        ],
+        content: 'Pinging...',
+        fetchReply: true,
+        ephemeral: true,
     });
 
-    interaction.editReply({
-        embeds: [
-            new EmbedBuilder()
-                .setTitle('Pong!')
-                .setDescription(
-                    `Latency is ${
-                        sent.createdTimestamp - interaction.createdTimestamp
-                    }ms. API Latency is ${'hee'}ms`
-                )
-                .setTimestamp()
-                .setColor('0x5E81AC'),
-        ],
-    });
+    const latency = sent.createdTimestamp - interaction.createdTimestamp;
+    const embed = new EmbedBuilder()
+        .setTitle('Pong! 🏓')
+        .setDescription('Latency: ' + '`' + latency + 'ms`')
+        .setColor(
+            latency < 150 ? 0x57f287 : latency < 300 ? 0xfee75c : 0xed4245
+        );
 
-    setTimeout(async () => {
-        await interaction.deleteReply();
-    }, 600000);
+    await interaction.deleteReply();
+    await channel.send({ embeds: [embed] });
 };
 
 module.exports = {
