@@ -5,11 +5,12 @@ const {
     Client,
     Collection,
     GatewayIntentBits,
+    Partials,
     ActivityType,
 } = require('discord.js');
 
 const clientOptions = {
-    intents: [GatewayIntentBits.Guilds],
+    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.DirectMessages, GatewayIntentBits.MessageContent],
     presence: {
         status: 'online',
         activities: [
@@ -19,6 +20,7 @@ const clientOptions = {
             },
         ],
     },
+    partials: [Partials.Channel]
 };
 const client = new Client(clientOptions);
 

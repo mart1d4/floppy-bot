@@ -4,7 +4,7 @@
     "description": "A nice Discord bot",
     "main": "index.js",
     "scripts": {
-        "dev": "nodemon index.js",
+        "dev": "node index.js",
         "start": "node index.js",
         "addCommands": "node addCommands.js"
     },
@@ -25,6 +25,7 @@
     "license": "ISC",
     "dependencies": {
         "discord.js": "^14.7.1",
-        "dotenv": "^16.0.3"
+        "dotenv": "^16.0.3",
+        "openai": "^3.2.1"
     }
 }

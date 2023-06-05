@@ -156,23 +156,22 @@ const execute = async (interaction) => {
                 ? i == 0
                     ? 'There was no messages to delete'
                     : i == -1
-                    ? "You don't have permission to delete messages"
-                    : i == -2
-                    ? "You don't have permission to view the channel"
-                    : i == -3
-                    ? "You can't delete messages from a voice channel"
-                    : i == -4
-                    ? 'You need to be an administrator to delete all messages'
-                    : 'All messages successfully deleted'
-                : `Deleted ${amount} message${amount > 1 ? 's' : ''} ${
-                      user ? `by <@${user.id}>` : ''
-                  } in ${channel}`
+                        ? "You don't have permission to delete messages"
+                        : i == -2
+                            ? "You don't have permission to view the channel"
+                            : i == -3
+                                ? "You can't delete messages from a voice channel"
+                                : i == -4
+                                    ? 'You need to be an administrator to delete all messages'
+                                    : 'All messages successfully deleted'
+                : `Deleted ${amount} message${amount > 1 ? 's' : ''} ${user ? `by <@${user.id}>` : ''
+                } in ${channel}`
         )
         .setFooter({
             text: `Requested by ${interaction.user.tag}`,
         })
         .setTimestamp()
-        .setColor(-5 < i && i <= 0 ? '0xED4245' : '0x57F287');
+        .setColor(-5 < i && i <= 0 ? 0xED4245 : 0x57F287);
 
     if (i == -5) {
         if (channel == interaction.channel) {

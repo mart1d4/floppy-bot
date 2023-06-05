@@ -38,7 +38,7 @@ const execute = async (interaction) => {
             text: `Requested by ${interaction.user.tag}`,
             iconURL: interaction.user.avatarURL(),
         })
-        .setColor('0x5865F2');
+        .setColor(0x5865F2);
 
     const firstRow = new ActionRowBuilder()
         .addComponents(
