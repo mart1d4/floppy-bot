@@ -11,7 +11,7 @@ const {
 const timout = process.env.TIMEOUT;
 
 const data = new SlashCommandBuilder()
-    .setName('print')
+    .setName('say')
     .setDescription('Replies with your input')
     .addStringOption((option) =>
         option
@@ -132,12 +132,10 @@ const execute = async (interaction) => {
                     new EmbedBuilder()
                         .setTitle('Success')
                         .setDescription(
-                            `Successfully sent ${number} message${
-                                number > 1 ? 's' : ''
-                            } to ${channel}${
-                                !color
-                                    ? '\n\n You entered an invalid color\n Messages were sent with default color `#202225`'
-                                    : ''
+                            `Successfully sent ${number} message${number > 1 ? 's' : ''
+                            } to ${channel}${!color
+                                ? '\n\n You entered an invalid color\n Messages were sent with default color `#202225`'
+                                : ''
                             }`
                         )
                         .setTimestamp()

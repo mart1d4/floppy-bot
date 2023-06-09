@@ -12,15 +12,19 @@ Once you've done that, you can run the bot using the command `npm start`.
 
 Floppy-Bot currently supports the following commands:
 
-- `!ping`: Returns "Pong!" to let you know the bot is working.
-- `!server`: Displays information about the current server, including the number of members and the server's ID.
-- `!user <@user>`: Displays information about the specified user, including their username, discriminator, and ID.
-- `!delete <number>`: Deletes the specified number of messages from the current channel.
-- `!say <message>`: Sends a message to the current channel as the bot.
+-   `/ping`: Returns the server and client latency.
+-   `/server`: Displays information about the current server.
+-   `/user`: Displays information about the specified user.
+-   `/delete`: Deletes the specified number of messages.
+-   `/say`: Sends a message to the current channel.
+-   `/urban`: Searches Urban Dictionary for the specified term.
+-   `/ask`: Asks gpt-3 a question. Follow up questions can be asked by replying to the bot's response.
 
 ## Contributing
 
-Contributions to this project are welcome. To contribute, please fork the repository and create a new branch for your changes. Once you've made your changes, submit a pull request and we'll review your code.
+Contributions to this project are welcome.<br />
+To contribute, please fork the repository and create a new branch for your changes.<br />
+Once you've made your changes, submit a pull request and we'll review your code.
 
 ## License
 

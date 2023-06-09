@@ -12,7 +12,7 @@ const {
 const timout = process.env.TIMEOUT;
 
 const data = new SlashCommandBuilder()
-    .setName('purge')
+    .setName('delete')
     .setDescription('Deletes the specified number of messages')
     .addIntegerOption((option) =>
         option

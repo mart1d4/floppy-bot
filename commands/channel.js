@@ -1,6 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder, Client } = require('discord.js');
 const index = require('../index.js');
-const client = index.client;
 
 const data = new SlashCommandBuilder()
     .setName('channel')
