@@ -8,9 +8,17 @@ const {
     Partials,
     ActivityType,
 } = require('discord.js');
+const { Player } = require("discord-player");
 
 const clientOptions = {
-    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.DirectMessages, GatewayIntentBits.MessageContent],
+    intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.DirectMessages,
+        GatewayIntentBits.MessageContent,
+        GatewayIntentBits.GuildPresences,
+        GatewayIntentBits.GuildVoiceStates
+    ],
     presence: {
         status: 'online',
         activities: [
@@ -22,7 +30,9 @@ const clientOptions = {
     },
     partials: [Partials.Channel]
 };
-const client = new Client(clientOptions);
+let client = new Client(clientOptions);
+
+const player = Player.singleton(client);
 
 const eventsPath = path.join(__dirname, 'events');
 const eventFiles = fs
@@ -35,11 +45,12 @@ for (const file of eventFiles) {
     if (event.once) {
         client.once(event.name, (...args) => event.execute(...args));
     } else {
-        client.on(event.name, (...args) => event.execute(...args));
+        client.on(event.name, (...args) => event.execute(client, ...args));
     }
 }
 
 client.commands = new Collection();
+client.cooldowns = new Collection();
 
 const commandsPath = path.join(__dirname, 'commands');
 const commandFiles = fs
@@ -59,5 +70,6 @@ for (const file of commandFiles) {
 }
 
 client.login(process.env.TOKEN);
-
-exports.client = client;
+module.exports = {
+    client: client,
+}

@@ -39,20 +39,18 @@ const execute = async (interaction) => {
             'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Urban_Dictionary_logo.svg/1200px-Urban_Dictionary_logo.svg.png'
         )
         .setDescription(
-            `${
-                answer.definition.length > 1024
-                    ? `${answer.definition.substring(0, 1021)}...`
-                    : answer.definition
+            `${answer.definition.length > 1024
+                ? `${answer.definition.substring(0, 1021)}...`
+                : answer.definition
             }`
         )
         .addFields(
             {
                 name: 'Example',
-                value: `${
-                    answer.example.length > 1024
-                        ? `${answer.example.substring(0, 1021)}...`
-                        : answer.example
-                }`,
+                value: `${answer.example.length > 1024
+                    ? `${answer.example.substring(0, 1021)}...`
+                    : answer.example
+                    }`,
                 inline: false,
             },
             {
@@ -76,6 +74,6 @@ const execute = async (interaction) => {
 };
 
 module.exports = {
-    data,
-    execute,
+    data: data,
+    execute: execute,
 };

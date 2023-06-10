@@ -1,31 +1,37 @@
 {
     "name": "floppy-bot",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": "A nice Discord bot",
     "main": "index.js",
     "scripts": {
         "dev": "node index.js",
         "start": "node index.js",
-        "addCommands": "node addCommands.js"
+        "addCommands": "node addCommands.js",
+        "removeCommands": "node removeCommands.js"
     },
     "keywords": [
         "Discord",
         "Bot",
         "Floppy",
         "Moderation",
-        "Fun",
-        "Music",
+        "Chill",
+        "Chatbot",
         "Commands"
     ],
     "author": {
-        "name": "Martin Danton",
+        "name": "mart1d4",
         "email": "contact@mart1d4.com",
-        "url": "https://mart1d4.com/"
+        "url": "https://www.mart1d4.com/"
     },
-    "license": "ISC",
+    "license": "MIT",
     "dependencies": {
+        "@discord-player/extractor": "^4.2.2",
+        "@discordjs/opus": "^0.9.0",
+        "@discordjs/voice": "^0.16.0",
+        "discord-player": "^6.3.1",
         "discord.js": "^14.7.1",
         "dotenv": "^16.0.3",
-        "openai": "^3.2.1"
+        "sodium": "^3.0.2",
+        "ytdl-core": "^4.11.4"
     }
 }

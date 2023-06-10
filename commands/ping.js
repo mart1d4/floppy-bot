@@ -1,5 +1,4 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const client = require('../index.js').client;
 
 const data = new SlashCommandBuilder()
     .setName('ping')
@@ -27,6 +26,6 @@ const execute = async (interaction) => {
 };
 
 module.exports = {
-    data,
-    execute,
+    data: data,
+    execute: execute,
 };

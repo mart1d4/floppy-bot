@@ -6,7 +6,7 @@ const {
 const {
     userHasPermission,
     userHasChannelPermission,
-} = require('../utils/permissions.js');
+} = require('../lib/permissions.js');
 
 const timout = process.env.TIMEOUT;
 
@@ -154,6 +154,6 @@ const execute = async (interaction) => {
 };
 
 module.exports = {
-    data,
-    execute,
+    data: data,
+    execute: execute,
 };

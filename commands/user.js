@@ -47,6 +47,6 @@ const execute = async (interaction) => {
 };
 
 module.exports = {
-    data,
-    execute,
+    data: data,
+    execute: execute,
 };

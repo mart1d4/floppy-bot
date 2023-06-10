@@ -7,7 +7,7 @@ const {
 const {
     userHasPermission,
     userHasChannelPermission,
-} = require('../utils/permissions.js');
+} = require('../lib/permissions.js');
 
 const timout = process.env.TIMEOUT;
 
@@ -28,7 +28,14 @@ const data = new SlashCommandBuilder()
             .setDescription(
                 'The channel to delete messages from. Defaults to the current channel.'
             )
-            .addChannelTypes(ChannelType.GuildText)
+            .addChannelTypes(
+                ChannelType.GuildText,
+                ChannelType.GuildForum,
+                ChannelType.GuildAnnouncement,
+                ChannelType.AnnouncementThread,
+                ChannelType.PrivateThread,
+                ChannelType.PublicThread,
+            )
             .setRequired(false)
     )
     .addUserOption((option) =>
@@ -56,150 +63,127 @@ const execute = async (interaction) => {
     const options = interaction.options;
     let amount = options.getInteger('amount');
     const channel = options.getChannel('channel') ?? interaction.channel;
+    const isDM = channel.type == 1;
     const user = options.getUser('user') ?? null;
     const all = options.getBoolean('all') ?? false;
 
-    if (
-        (!userHasPermission(
-            interaction.member,
-            PermissionsBitField.Flags.ManageMessages
-        ) ||
-            !userHasChannelPermission(
-                interaction.member,
-                channel,
-                PermissionsBitField.Flags.ManageMessages
-            )) &&
-        (user == null || (user != null && user.id != interaction.member.id))
-    ) {
-        // User doesn't have permission to delete messages and isn't deleting their own messages
-        i = -1;
-    } else if (
-        !userHasChannelPermission(
-            interaction.member,
-            channel,
-            PermissionsBitField.Flags.ViewChannel
-        )
-    ) {
-        // User doesn't have permission to view the channel
-        i = -2;
-    } else if (channel.type == ChannelType.GuildVoice) {
-        // Channel is a voice channel
-        i = -3;
-    } else if (
-        all &&
-        !userHasPermission(
-            interaction.member,
-            PermissionsBitField.Flags.Administrator
-        )
-    ) {
-        // User doesn't have permission to delete all messages
-        i = -4;
-    } else if (all) {
-        // Delete all messages by cloning the channel and deleting the old one
-        newChannel = await channel.clone();
-        await channel.delete();
-        i = -5;
-    } else {
-        while (amount - i >= 100) {
-            const messages = await channel.messages.fetch({ limit: 100 });
-            if (user == null) {
-                if (messages.size < 100) {
-                    amount = i + messages.size;
-                }
-                i += (await channel.bulkDelete(messages)).size;
-            } else {
-                const filteredMessages = messages.filter(
-                    (message) => message.author.id == user.id
-                );
-                if (filteredMessages.size == 0) {
-                    amount = i;
-                    break;
-                }
-                i += (await channel.bulkDelete(filteredMessages)).size;
-            }
+    const sendError = (error) => {
+        const embed = new EmbedBuilder()
+            .setTitle('Error')
+            .setDescription(error)
+            .setColor(0xED4245);
+
+        interaction.editReply({ embeds: [embed] });
+    };
+
+    const sendSuccess = (message) => {
+        const embed = new EmbedBuilder()
+            .setTitle('Success')
+            .setDescription(message)
+            .setColor(0x57F287);
+
+        interaction.editReply({ embeds: [embed] });
+    };
+
+    if (isDM) {
+        sendError('You cannot delete messages in a DM.');
+        return;
+    }
+
+    if (all) {
+        if (isDM) {
+            sendError('You cannot delete all messages in a DM.');
+            return;
+        } else if (user) {
+            sendError('You cannot delete all messages by a user.');
+            return;
         }
 
-        while (amount - i > 0) {
-            if (user == null) {
-                const messages = await channel.messages.fetch({
-                    limit: amount - i,
-                });
-                if (messages.size < amount - i) {
-                    amount = i + messages.size;
-                }
-                i += (await channel.bulkDelete(messages)).size;
-            } else {
-                let filteredMessages;
-                await channel.messages
-                    .fetch({
-                        limit: 100,
-                    })
-                    .then((messages) => {
-                        filteredMessages = messages
-                            .filter((m) => m.author.id === user.id)
-                            .array()
-                            .slice(0, amount - i);
-                    });
-                if (filteredMessages.size == 0) {
-                    amount = i;
-                    break;
-                }
-                i += (await channel.bulkDelete(filteredMessages)).size;
+        if (!userHasPermission(interaction.member, PermissionsBitField.ManageMessages)) {
+            sendError('You do not have permission to delete messages.');
+            return;
+        }
+
+        newChannel = await channel.clone();
+        await channel.delete();
+
+        sendSuccess(`Successfully deleted all messages in ${newChannel}.`);
+        return;
+    }
+
+    if (!isDM) {
+        if (!userHasPermission(interaction.member, PermissionsBitField.ManageMessages)) {
+            sendError('You do not have permission to delete messages.');
+            return;
+        }
+    }
+
+    while (amount - i >= 100) {
+        const messages = await channel.messages.fetch({ limit: 100 });
+
+        if (!user) {
+            if (messages.size < 100) {
+                amount = i + messages.size;
             }
+
+            i += (await channel.bulkDelete(messages)).size;
+        } else {
+            const filteredMessages = messages.filter(
+                (message) => message.author.id == user.id
+            );
+
+            if (filteredMessages.size == 0) {
+                amount = i;
+                break;
+            }
+
+            i += (await channel.bulkDelete(filteredMessages)).size;
+        }
+    }
+
+    while (amount - i > 0) {
+        if (!user) {
+            const messages = await channel.messages.fetch({
+                limit: amount - i,
+            });
+
+            if (messages.size < amount - i) {
+                amount = i + messages.size;
+            }
+
+            i += (await channel.bulkDelete(messages)).size;
+        } else {
+            let filteredMessages;
+
+            await channel.messages
+                .fetch({
+                    limit: 100,
+                })
+                .then((messages) => {
+                    filteredMessages = messages
+                        .filter((m) => m.author.id === user.id)
+                        .array()
+                        .slice(0, amount - i);
+                });
+
+            if (filteredMessages.size == 0) {
+                amount = i;
+                break;
+            }
+
+            i += (await channel.bulkDelete(filteredMessages)).size;
         }
     }
 
     const embed = new EmbedBuilder()
-        .setTitle(-5 < i && i <= 0 ? 'Purge Failed' : 'Purge Successful')
-        .setDescription(
-            -5 <= i && i <= 0
-                ? i == 0
-                    ? 'There was no messages to delete'
-                    : i == -1
-                        ? "You don't have permission to delete messages"
-                        : i == -2
-                            ? "You don't have permission to view the channel"
-                            : i == -3
-                                ? "You can't delete messages from a voice channel"
-                                : i == -4
-                                    ? 'You need to be an administrator to delete all messages'
-                                    : 'All messages successfully deleted'
-                : `Deleted ${amount} message${amount > 1 ? 's' : ''} ${user ? `by <@${user.id}>` : ''
-                } in ${channel}`
-        )
-        .setFooter({
-            text: `Requested by ${interaction.user.tag}`,
-        })
-        .setTimestamp()
-        .setColor(-5 < i && i <= 0 ? 0xED4245 : 0x57F287);
+        .setTitle('Success')
+        .setDescription(`Successfully deleted ${amount} messages.`)
+        .setColor(0x57F287);
 
-    if (i == -5) {
-        if (channel == interaction.channel) {
-            await newChannel.send({ embeds: [embed] });
-        } else {
-            await newChannel.send({ embeds: [embed] });
-            embed.setDescription(
-                `Successfully deleted all messages in ${newChannel}.`
-            );
-            await interaction.editReply({ embeds: [embed] });
-            setTimeout(async () => {
-                await interaction.deleteReply();
-            }, timout);
-        }
-    } else {
-        await interaction.editReply({ content: 'Loading...' });
-        await interaction
-            .followUp({ embeds: [embed], ephemeral: false })
-            .then(async (message) => {
-                await interaction.deleteReply();
-                setTimeout(async () => {
-                    await message.delete();
-                }, timout);
-            });
-    }
+    interaction.editReply({ embeds: [embed] });
 };
 
 module.exports = {
-    data,
-    execute,
+    data: data,
+    execute: execute,
 };

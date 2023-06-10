@@ -18,6 +18,7 @@ const data = new SlashCommandBuilder()
 
 const execute = async (interaction) => {
     await interaction.deferReply({ ephemeral: true });
+    let currentAIMessage = null;
 
     const messages = [{
         "role": "user",
@@ -26,6 +27,7 @@ const execute = async (interaction) => {
     }];
 
     await interaction.channel.send({ content: `${interaction.user.username} asked: ${interaction.options.getString('question')}` });
+    await interaction.deleteReply();
 
     const getAnswer = async () => {
         const answer = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -57,10 +59,23 @@ const execute = async (interaction) => {
         "name": "Floppy"
     });
 
-    await interaction.channel.send({ content: answer });
-    await interaction.deleteReply();
+    const aiMessage = await interaction.channel.send({ content: answer });
+    currentAIMessage = aiMessage.id;
 
-    const filter = m => m.content !== answer && !m.author.bot;
+    const filter = async (message) => {
+        if (message.content === answer) return false;
+        if (message.author.bot) return false;
+
+        if (message.type === 19) {
+            const reply = await message.fetchReference();
+
+            if (reply.id === currentAIMessage) {
+                return true;
+            }
+        }
+
+        return false;
+    };
     const collector = interaction.channel.createMessageCollector({ time: 1000 * 60 * 5, filter: filter });
 
     collector.on('collect', async (m) => {
@@ -81,7 +96,8 @@ const execute = async (interaction) => {
             return;
         }
 
-        await interaction.channel.send({ content: newAnswer });
+        const aiMessage = await interaction.channel.send({ content: newAnswer });
+        currentAIMessage = aiMessage.id;
     });
 
     collector.on('end', async (collected) => {
@@ -94,7 +110,7 @@ const execute = async (interaction) => {
                 If you want to talk again, just ask me a question.
                 I have answered ${collected.size} questions.
             `)
-            .setColor('#0099ff')
+            .setColor(0x0099ff)
             .setTimestamp();
 
         await interaction.channel.send({ embeds: [embed] });
@@ -104,6 +120,6 @@ const execute = async (interaction) => {
 };
 
 module.exports = {
-    data,
-    execute,
+    data: data,
+    execute: execute,
 };
