@@ -7,6 +7,18 @@ const data = new SlashCommandBuilder()
 
 const execute = (interaction) => {
     const queue = useQueue(interaction.guild.id);
+
+    if (!queue || !queue.isPlaying()) {
+        const embed = new EmbedBuilder()
+            .setAuthor({
+                name: '|  No music is currently playing',
+                iconURL: interaction.guild.iconURL()
+            })
+            .setColor(0xFEE75C);
+
+        return interaction.reply({ embeds: [embed] });
+    }
+
     queue.node.setPaused(!queue.node.isPaused());
 
     const embed = new EmbedBuilder()

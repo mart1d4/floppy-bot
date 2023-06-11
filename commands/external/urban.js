@@ -7,6 +7,8 @@ const data = new SlashCommandBuilder()
         option
             .setName('term')
             .setDescription('The term to search for')
+            .setMinLength(1)
+            .setMaxLength(100)
             .setRequired(true)
     );
 
@@ -21,19 +23,33 @@ const execute = async (interaction) => {
 
     if (!list.length) {
         const embed = new EmbedBuilder()
-            .setTitle('No Results')
-            .setDescription(
-                `No results found for **${term}**. Try searching for something else.`
-            )
-            .setColor('0x5E81AC');
+            .setAuthor({
+                name: '|  No results found',
+                iconURL: interaction.guild.iconURL(),
+            })
+            .setColor(0xFEE75C);
 
         return await interaction.editReply({ embeds: [embed] });
     }
 
     const [answer] = list;
 
+    if (!answer) {
+        const embed = new EmbedBuilder()
+            .setAuthor({
+                name: '|  No results found',
+                iconURL: interaction.guild.iconURL(),
+            })
+            .setColor(0xFEE75C);
+
+        return await interaction.editReply({ embeds: [embed] });
+    }
+
     const embed = new EmbedBuilder()
-        .setTitle(`Definition of ${term}`)
+        .setAuthor({
+            name: `|  Definition of ${answer.word}`,
+            iconURL: interaction.guild.iconURL(),
+        })
         .setURL(answer.permalink)
         .setThumbnail(
             'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Urban_Dictionary_logo.svg/1200px-Urban_Dictionary_logo.svg.png'
@@ -49,18 +65,18 @@ const execute = async (interaction) => {
                 name: 'Example',
                 value: `${answer.example.length > 1024
                     ? `${answer.example.substring(0, 1021)}...`
-                    : answer.example
+                    : answer.example || 'No example'
                     }`,
                 inline: false,
             },
             {
                 name: '👍',
-                value: answer.thumbs_up.toString(),
+                value: `${answer.thumbs_up}`,
                 inline: true,
             },
             {
                 name: '👎',
-                value: answer.thumbs_down.toString(),
+                value: `${answer.thumbs_down}`,
                 inline: true,
             }
         )
@@ -68,7 +84,7 @@ const execute = async (interaction) => {
             text: `Written by ${answer.author}`,
         })
         .setTimestamp(new Date(answer.written_on))
-        .setColor('0x5E81AC');
+        .setColor(0x5865F2);
 
     await interaction.editReply({ embeds: [embed] });
 };

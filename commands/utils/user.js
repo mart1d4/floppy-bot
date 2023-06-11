@@ -18,7 +18,7 @@ const execute = async (interaction) => {
         .setTitle('User Info')
         .setThumbnail(user.avatarURL())
         .addFields(
-            { name: 'ID', value: user.id, inline: false },
+            { name: 'ID', value: `\`${user.id}\``, inline: false },
             { name: 'Username', value: user.username, inline: true },
             { name: '\u200B', value: '\u200B', inline: true },
             { name: 'Tag', value: user.discriminator, inline: true },
@@ -38,10 +38,10 @@ const execute = async (interaction) => {
             }
         )
         .setFooter({
-            text: `Requested by ${interaction.user.username}#${interaction.user.discriminator}`,
+            text: `Requested by ${interaction.user.username}`,
             iconURL: interaction.user.avatarURL(),
         })
-        .setColor('0x5E81AC');
+        .setColor(0x5E81AC);
 
     await interaction.reply({ embeds: [embed] });
 };

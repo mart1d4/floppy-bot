@@ -17,6 +17,18 @@ const execute = (interaction) => {
     const volume = interaction.options.getInteger('percentage', true);
 
     const queue = useQueue(interaction.guild.id);
+
+    if (!queue || !queue.isPlaying()) {
+        const embed = new EmbedBuilder()
+            .setAuthor({
+                name: '|  No music is currently playing',
+                iconURL: interaction.guild.iconURL()
+            })
+            .setColor(0xFEE75C);
+
+        return interaction.reply({ embeds: [embed] });
+    }
+
     queue.node.setVolume(volume);
 
     const embed = new EmbedBuilder()
