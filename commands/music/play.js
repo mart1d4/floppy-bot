@@ -42,9 +42,11 @@ const execute = async (interaction) => {
 
         return interaction.deleteReply();
     } catch (e) {
+        console.error(e);
+
         const embed = new EmbedBuilder()
             .setAuthor({
-                name: '**|  Something went wrong**',
+                name: '|  Something went wrong',
                 iconURL: interaction.client.user.avatarURL()
             })
             .setColor(0xED4245);
