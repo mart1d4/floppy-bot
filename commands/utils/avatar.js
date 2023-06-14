@@ -13,29 +13,29 @@ const data = new SlashCommandBuilder()
         option
             .setName('user')
             .setDescription(
-                "The user's avatar to display. Defaults to the command's executor."
+                "The user's avatar to display. Defaults to you."
             )
     );
 
 const execute = async (interaction) => {
     const user = interaction.options.getUser('user') ?? interaction.user;
-    const avatar = user.displayAvatarURL();
-    const pngURL = user.displayAvatarURL({ format: 'png' });
-    const jpgURL = user.displayAvatarURL({ format: 'jpg' });
-    const webpURL = user.displayAvatarURL({ format: 'webp' });
-    const gifURL = user.displayAvatarURL({ format: 'gif' });
-    const isGif = user.displayAvatarURL({ format: 'gif' }).endsWith('.gif');
+    const avatar = user.displayAvatarURL({ size: 1024 });
+    const pngURL = user.displayAvatarURL({ extension: 'png' });
+    const jpgURL = user.displayAvatarURL({ extension: 'jpg' });
+    const webpURL = user.displayAvatarURL({ extension: 'webp' })
+    const gifURL = user.displayAvatarURL({ extension: 'gif' });
+    const isGif = user.displayAvatarURL({ extension: 'gif' }).endsWith('.gif');
 
     const embed = new EmbedBuilder()
         .setAuthor({
-            name: user.tag,
+            name: `Avatar for ${user.username}`,
             iconURL: avatar,
         })
         .setTitle('Avatar Link')
         .setURL(avatar)
         .setImage(avatar)
         .setFooter({
-            text: `Requested by ${interaction.user.tag}`,
+            text: `Requested by ${interaction.user.username}`,
             iconURL: interaction.user.avatarURL(),
         })
         .setColor(0x5865F2);
@@ -52,9 +52,7 @@ const execute = async (interaction) => {
                 .setLabel('JPG')
                 .setStyle(ButtonStyle.Link)
                 .setURL(jpgURL)
-        );
-
-    const secondRow = new ActionRowBuilder()
+        )
         .addComponents(
             new ButtonBuilder()
                 .setLabel('WEBP')
@@ -63,7 +61,6 @@ const execute = async (interaction) => {
         )
         .addComponents(
             new ButtonBuilder()
-
                 .setLabel('GIF')
                 .setStyle(ButtonStyle.Link)
                 .setURL(gifURL)
@@ -72,7 +69,7 @@ const execute = async (interaction) => {
 
     await interaction.reply({
         embeds: [embed],
-        components: [firstRow, secondRow],
+        components: [firstRow],
     });
 };
 

@@ -15,12 +15,12 @@ const execute = async (interaction) => {
 
     const embed = new EmbedBuilder()
         .setAuthor({
-            name: `#${channel.name}`,
+            name: `${channel.name ? `#${channel.name}` : `${interaction.client.user.username}`}`,
             iconURL: interaction.client.user.avatarURL(),
         })
-        .setThumbnail(interaction.guild.iconURL())
+        .setThumbnail(interaction.guild ? interaction.guild.iconURL() : interaction.client.user.avatarURL())
         .setTitle('Channel information')
-        .setDescription(`**Channel id: \`${channel.id}\` | Name: ${channel.name ? `<#${channel.id}>**` : `DM Channel - ${interaction.client.user.username}**`}`)
+        .setDescription(`**Channel id: \`${channel.id}\` | Name: ${channel.name ? `<#${channel.id}>**` : `${interaction.client.user.username}**`}`)
         .addFields(
             { name: 'Created', value: time(channel.createdAt, 'R'), inline: true },
             {

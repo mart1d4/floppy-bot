@@ -2,7 +2,7 @@ const { SlashCommandBuilder, EmbedBuilder, ChannelType, PermissionFlagsBits } = 
 
 const data = new SlashCommandBuilder()
     .setName('delete')
-    .setDescription('Deletes the specified number of messages')
+    .setDescription('Deletes the specified number of messages. Messages older than 2 weeks cannot be deleted.')
     .addIntegerOption((option) =>
         option
             .setName('number')

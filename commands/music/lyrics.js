@@ -9,14 +9,14 @@ const data = new SlashCommandBuilder()
 
 const execute = async (interaction) => {
     const song = interaction.options.getString('song') ?? null;
-    const queue = useQueue(interaction.guild.id);
+    const queue = useQueue(interaction.guild?.id);
     const lyricsFinder = lyricsExtractor(/* 'optional genius API key' */);
 
     if (!song && !queue?.currentTrack) {
         const embed = new EmbedBuilder()
             .setAuthor({
                 name: '|  No music is currently playing',
-                iconURL: interaction.guild.iconURL()
+                iconURL: interaction.guild ? interaction.guild.iconURL() : interaction.client.user.avatarURL()
             })
             .setDescription('You can specify a song to get lyrics for.')
             .setColor(0xFEE75C);
