@@ -44,6 +44,17 @@ const execute = async (interaction) => {
     } catch (e) {
         console.error(e);
 
+        if (e.contains('No results found')) {
+            const embed = new EmbedBuilder()
+                .setAuthor({
+                    name: '|  No results found',
+                    iconURL: interaction.client.user.avatarURL()
+                })
+                .setColor(0xED4245);
+
+            return interaction.followUp({ embeds: [embed] });
+        }
+
         const embed = new EmbedBuilder()
             .setAuthor({
                 name: '|  Something went wrong',

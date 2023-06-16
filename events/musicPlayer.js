@@ -24,17 +24,9 @@ const listener = (player) => {
     player.events.on('audioTrackAdd', (queue, track) => {
         const embed = new EmbedBuilder()
             .setAuthor({
-                name: queue.guild.name,
+                name: `|  Track added - ${track.title}`,
                 iconURL: queue.guild.iconURL()
             })
-            .setThumbnail(track.thumbnail)
-            .setTitle('Track Added')
-            .setDescription(`[${track.title}](${track.url})`)
-            .addFields(
-                { name: 'Duration', value: `\`${track.duration}\``, inline: true },
-                { name: 'Queue', value: `\`${queue.size}\``, inline: true },
-                { name: 'Requester', value: `<@${queue.metadata.member.id}>`, inline: false },
-            )
             .setColor(0x57F287);
 
         queue.metadata.channel.send({ embeds: [embed] });
