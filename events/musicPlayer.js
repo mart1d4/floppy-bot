@@ -1,6 +1,6 @@
-const { EmbedBuilder } = require('discord.js');
+import { EmbedBuilder } from 'discord.js';
 
-const listener = (player) => {
+export const listener = (player) => {
     player.events.on('playerStart', (queue, track) => {
         const embed = new EmbedBuilder()
             .setAuthor({
@@ -77,5 +77,3 @@ const listener = (player) => {
         queue.metadata.channel.send({ embeds: [embed] });
     });
 }
-
-module.exports = listener;

@@ -2,6 +2,7 @@
     "name": "floppy-bot",
     "version": "0.3.0",
     "description": "A nice Discord bot",
+    "type": "module",
     "main": "index.js",
     "scripts": {
         "dev": "node index.js",
@@ -31,6 +32,8 @@
         "discord-player": "^6.3.1",
         "discord.js": "^14.7.1",
         "dotenv": "^16.0.3",
+        "node-opus": "^0.3.3",
+        "opusscript": "^0.0.8",
         "sodium": "^3.0.2",
         "ytdl-core": "^4.11.4"
     }

@@ -1,13 +1,13 @@
-const { SlashCommandBuilder, EmbedBuilder, time } = require('discord.js');
+import { SlashCommandBuilder, EmbedBuilder, time } from 'discord.js';
 
-const data = new SlashCommandBuilder()
+export const data = new SlashCommandBuilder()
     .setName('user')
     .setDescription('Displays info about a user')
     .addUserOption((option) =>
         option.setName('target').setDescription("The user's info to display")
     );
 
-const execute = async (interaction) => {
+export const execute = async (interaction) => {
     const user = interaction.options.getUser('target') ?? interaction.user;
 
     const embed = new EmbedBuilder()
@@ -44,9 +44,4 @@ const execute = async (interaction) => {
         .setColor(0x5E81AC);
 
     await interaction.reply({ embeds: [embed] });
-};
-
-module.exports = {
-    data: data,
-    execute: execute,
 };

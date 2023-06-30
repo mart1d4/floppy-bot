@@ -1,11 +1,11 @@
-const { SlashCommandBuilder, EmbedBuilder, time } = require('discord.js');
+import { SlashCommandBuilder, EmbedBuilder, time } from 'discord.js';
 
-const data = new SlashCommandBuilder()
+export const data = new SlashCommandBuilder()
     .setName('server')
     .setDescription('Provides information about the server.')
     .setDMPermission(false);
 
-const execute = async (interaction) => {
+export const execute = async (interaction) => {
     if (!interaction.guild || !interaction.guild.available) {
         // Guild outage
         const embed = new EmbedBuilder()
@@ -92,9 +92,3 @@ const execute = async (interaction) => {
 
     return interaction.reply({ embeds: [embed] });
 };
-
-module.exports = {
-    data: data,
-    execute: execute,
-};
-

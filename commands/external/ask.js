@@ -1,10 +1,7 @@
-const {
-    SlashCommandBuilder,
-    EmbedBuilder,
-} = require('discord.js');
-require('dotenv').config();
+import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import 'dotenv/config'
 
-const data = new SlashCommandBuilder()
+export const data = new SlashCommandBuilder()
     .setName('ask')
     .setDescription('Replies to your quesiton')
     .addStringOption((option) =>
@@ -16,7 +13,7 @@ const data = new SlashCommandBuilder()
             .setRequired(true)
     );
 
-const execute = async (interaction) => {
+export const execute = async (interaction) => {
     await interaction.deferReply({ ephemeral: true });
     let currentAIMessage = null;
 
@@ -117,9 +114,4 @@ const execute = async (interaction) => {
     });
 
     return;
-};
-
-module.exports = {
-    data: data,
-    execute: execute,
 };

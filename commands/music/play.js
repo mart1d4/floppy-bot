@@ -1,7 +1,7 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { usePlayer, useMasterPlayer, useQueue } = require("discord-player");
+import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import { useMasterPlayer } from "discord-player";
 
-const data = new SlashCommandBuilder()
+export const data = new SlashCommandBuilder()
     .setName('play')
     .setDescription('Play music for you')
     .addStringOption((option) =>
@@ -9,33 +9,30 @@ const data = new SlashCommandBuilder()
             .setName('song')
             .setDescription('The song you want to play')
             .setMinLength(1)
-            .setMaxLength(2000)
+            .setMaxLength(500)
             .setRequired(true)
-    );
+    )
+    .setDMPermission(false);
 
-const execute = async (interaction) => {
-    await interaction.deferReply({ ephemeral: true });
-
-    const channel = interaction.member?.voice?.channel;
-    const icon = interaction.guild ? interaction.guild.iconURL() : interaction.client.user.avatarURL();
-
-    if (!channel) {
+export const execute = async (interaction) => {
+    if (!interaction.member?.voice?.channel) {
         const embed = new EmbedBuilder()
             .setAuthor({
-                name: '|  You are not connected to a voice channel',
-                iconURL: icon
+                name: '|  You must be in a voice channel to use this command',
+                iconURL: interaction.guild.iconURL()
             })
             .setColor(0xFEE75C);
 
-        return interaction.followUp({ embeds: [embed] });
+        return interaction.reply({ embeds: [embed] });
     }
 
-    const query = interaction.options.getString('song', true);
+    await interaction.deferReply({ ephemeral: true });
 
+    const query = interaction.options.getString('song', true);
     const player = useMasterPlayer();
 
     try {
-        await player.play(channel, query, {
+        await player.play(interaction.member.voice.channel, query, {
             nodeOptions: {
                 metadata: interaction
             }
@@ -65,9 +62,4 @@ const execute = async (interaction) => {
 
         return interaction.followUp({ embeds: [embed] });
     }
-};
-
-module.exports = {
-    data: data,
-    execute: execute,
 };

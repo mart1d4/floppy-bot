@@ -1,6 +1,6 @@
-const { SlashCommandBuilder, EmbedBuilder, ChannelType, PermissionFlagsBits } = require('discord.js');
+import { SlashCommandBuilder, EmbedBuilder, ChannelType, PermissionFlagsBits } from 'discord.js';
 
-const data = new SlashCommandBuilder()
+export const data = new SlashCommandBuilder()
     .setName('say')
     .setDescription('Replies with your input')
     .addStringOption((option) =>
@@ -56,7 +56,7 @@ const data = new SlashCommandBuilder()
     )
     .setDefaultMemberPermissions(PermissionFlagsBits.SendMessages);
 
-const execute = async (interaction) => {
+export const execute = async (interaction) => {
     await interaction.deferReply({ ephemeral: true });
 
     const options = interaction.options;
@@ -125,9 +125,4 @@ const execute = async (interaction) => {
         await interaction.deleteReply();
         return interaction.channel.send({ embeds: [embed], ephemeral: true });
     }
-};
-
-module.exports = {
-    data: data,
-    execute: execute,
 };

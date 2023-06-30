@@ -1,11 +1,23 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { useQueue } = require("discord-player");
+import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import { useQueue } from "discord-player";
 
-const data = new SlashCommandBuilder()
+export const data = new SlashCommandBuilder()
     .setName('queue')
-    .setDescription('Get the current queue');
+    .setDescription('Get the current queue')
+    .setDMPermission(false);
 
-const execute = async (interaction) => {
+export const execute = async (interaction) => {
+    if (!interaction.member?.voice?.channel) {
+        const embed = new EmbedBuilder()
+            .setAuthor({
+                name: '|  You must be in a voice channel to use this command',
+                iconURL: interaction.guild.iconURL()
+            })
+            .setColor(0xFEE75C);
+
+        return interaction.reply({ embeds: [embed] });
+    }
+
     const queue = useQueue(interaction.guild.id);
 
     if (!queue || !queue.isPlaying()) {
@@ -44,9 +56,4 @@ const execute = async (interaction) => {
 
 
     return interaction.reply({ embeds: [embed] });
-};
-
-module.exports = {
-    data: data,
-    execute: execute,
 };

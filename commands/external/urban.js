@@ -1,6 +1,6 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 
-const data = new SlashCommandBuilder()
+export const data = new SlashCommandBuilder()
     .setName('urban')
     .setDescription('Searches Urban Dictionary for a term')
     .addStringOption((option) =>
@@ -12,7 +12,7 @@ const data = new SlashCommandBuilder()
             .setRequired(true)
     );
 
-const execute = async (interaction) => {
+export const execute = async (interaction) => {
     await interaction.deferReply();
 
     const term = interaction.options.getString('term');
@@ -87,9 +87,4 @@ const execute = async (interaction) => {
         .setColor(0x5865F2);
 
     await interaction.editReply({ embeds: [embed] });
-};
-
-module.exports = {
-    data: data,
-    execute: execute,
 };

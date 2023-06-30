@@ -1,12 +1,6 @@
-const {
-    SlashCommandBuilder,
-    EmbedBuilder,
-    ActionRowBuilder,
-    ButtonBuilder,
-    ButtonStyle,
-} = require('discord.js');
+import { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 
-const data = new SlashCommandBuilder()
+export const data = new SlashCommandBuilder()
     .setName('avatar')
     .setDescription("Displays a user's avatar")
     .addUserOption((option) =>
@@ -17,7 +11,7 @@ const data = new SlashCommandBuilder()
             )
     );
 
-const execute = async (interaction) => {
+export const execute = async (interaction) => {
     const user = interaction.options.getUser('user') ?? interaction.user;
     const avatar = user.displayAvatarURL({ size: 1024 });
     const pngURL = user.displayAvatarURL({ extension: 'png' });
@@ -71,9 +65,4 @@ const execute = async (interaction) => {
         embeds: [embed],
         components: [firstRow],
     });
-};
-
-module.exports = {
-    data: data,
-    execute: execute,
 };

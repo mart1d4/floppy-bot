@@ -1,6 +1,6 @@
-const { SlashCommandBuilder, EmbedBuilder, ChannelType, PermissionFlagsBits } = require('discord.js');
+import { SlashCommandBuilder, EmbedBuilder, ChannelType, PermissionFlagsBits } from 'discord.js';
 
-const data = new SlashCommandBuilder()
+export const data = new SlashCommandBuilder()
     .setName('delete')
     .setDescription('Deletes the specified number of messages. Messages older than 2 weeks cannot be deleted.')
     .addIntegerOption((option) =>
@@ -38,7 +38,7 @@ const data = new SlashCommandBuilder()
     )
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages);
 
-const execute = async (interaction) => {
+export const execute = async (interaction) => {
     await interaction.deferReply({ ephemeral: true });
 
     let i = 0;
@@ -163,9 +163,4 @@ const execute = async (interaction) => {
         console.error(error);
         return sendError('An error occurred while deleting messages');
     }
-};
-
-module.exports = {
-    data: data,
-    execute: execute,
 };

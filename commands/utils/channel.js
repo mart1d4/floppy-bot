@@ -1,6 +1,6 @@
-const { SlashCommandBuilder, EmbedBuilder, time } = require('discord.js');
+import { SlashCommandBuilder, EmbedBuilder, time } from 'discord.js';
 
-const data = new SlashCommandBuilder()
+export const data = new SlashCommandBuilder()
     .setName('channel')
     .setDescription('Display information about a channel.')
     .addChannelOption((option) =>
@@ -9,7 +9,7 @@ const data = new SlashCommandBuilder()
             .setDescription('The channel to display (defaults to current channel).')
     );
 
-const execute = async (interaction) => {
+export const execute = async (interaction) => {
     const channel = interaction.options.getChannel('channel') ?? interaction.channel;
     const textChannels = [0, 1, 3, 5, 10, 11, 12, 15];
 
@@ -43,9 +43,4 @@ const execute = async (interaction) => {
         .setColor(0x5865F2);
 
     await interaction.reply({ embeds: [embed] });
-};
-
-module.exports = {
-    data: data,
-    execute: execute,
 };

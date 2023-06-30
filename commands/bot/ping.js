@@ -1,10 +1,10 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 
-const data = new SlashCommandBuilder()
+export const data = new SlashCommandBuilder()
     .setName('ping')
     .setDescription("Displays the bot's latency");
 
-const execute = async (interaction) => {
+export const execute = async (interaction) => {
     const channel = interaction.channel;
 
     const sent = await interaction.reply({
@@ -23,9 +23,4 @@ const execute = async (interaction) => {
 
     await interaction.deleteReply();
     await channel.send({ embeds: [embed] });
-};
-
-module.exports = {
-    data: data,
-    execute: execute,
 };

@@ -1,13 +1,18 @@
-const { lyricsExtractor } = require('@discord-player/extractor');
-const { SlashCommandBuilder, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, ComponentType } = require('discord.js');
-const { useQueue } = require("discord-player");
+import { SlashCommandBuilder, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, ComponentType } from 'discord.js';
+import { lyricsExtractor } from '@discord-player/extractor';
+import { useQueue } from "discord-player";
 
-const data = new SlashCommandBuilder()
+export const data = new SlashCommandBuilder()
     .setName('lyrics')
-    .setDescription('Get lyrics of the current playing song, or a song of your choice')
-    .addStringOption(option => option.setName('song').setDescription('The song to get lyrics for').setRequired(false));
+    .setDescription('Get lyrics for the current song, or a song of your choice')
+    .addStringOption((option) =>
+        option
+            .setName('song')
+            .setDescription('The song to get lyrics for')
+            .setRequired(false)
+    );
 
-const execute = async (interaction) => {
+export const execute = async (interaction) => {
     const song = interaction.options.getString('song') ?? null;
     const queue = useQueue(interaction.guild?.id);
     const lyricsFinder = lyricsExtractor(/* 'optional genius API key' */);
@@ -124,9 +129,4 @@ const execute = async (interaction) => {
     } else {
         return interaction.followUp({ embeds: [embed] });
     }
-};
-
-module.exports = {
-    data: data,
-    execute: execute,
 };

@@ -1,9 +1,9 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { useQueue } = require("discord-player");
+import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import { useQueue } from "discord-player";
 
-const data = new SlashCommandBuilder()
+export const data = new SlashCommandBuilder()
     .setName('volume')
-    .setDescription('Change the volume of the player')
+    .setDescription('Change the volume of the music player')
     .addIntegerOption((option) =>
         option
             .setName('percentage')
@@ -11,19 +11,30 @@ const data = new SlashCommandBuilder()
             .setMinValue(0)
             .setMaxValue(100)
             .setRequired(true)
-    );
+    )
+    .setDMPermission(false);
 
-const execute = (interaction) => {
+export const execute = (interaction) => {
     const volume = interaction.options.getInteger('percentage', true);
 
-    const queue = interaction.guild ? useQueue(interaction.guild.id) : null;
-    const icon = interaction.guild ? interaction.guild.iconURL() : interaction.client.user.avatarURL();
+    if (!interaction.member?.voice?.channel || volume < 0 || volume > 100) {
+        const embed = new EmbedBuilder()
+            .setAuthor({
+                name: '|  You must be in a voice channel to use this command',
+                iconURL: interaction.guild.iconURL()
+            })
+            .setColor(0xFEE75C);
+
+        return interaction.reply({ embeds: [embed] });
+    }
+
+    const queue = useQueue(interaction.guild.id);
 
     if (!queue || !queue.isPlaying()) {
         const embed = new EmbedBuilder()
             .setAuthor({
                 name: '|  No music is currently playing',
-                iconURL: icon
+                iconURL: interaction.guild.iconURL()
             })
             .setColor(0xFEE75C);
 
@@ -35,15 +46,10 @@ const execute = (interaction) => {
     const embed = new EmbedBuilder()
         .setAuthor({
             name: interaction.guild.name,
-            iconURL: icon
+            iconURL: interaction.guild.iconURL()
         })
         .setTitle('Music Player')
         .setDescription(`Volume set to \`${volume}%\``);
 
     return interaction.reply({ embeds: [embed] });
-};
-
-module.exports = {
-    data: data,
-    execute: execute,
 };

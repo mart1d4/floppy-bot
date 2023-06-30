@@ -1,16 +1,10 @@
-const {
-    SlashCommandBuilder,
-    ActionRowBuilder,
-    ModalBuilder,
-    TextInputBuilder,
-    TextInputStyle,
-} = require('discord.js');
+import { SlashCommandBuilder, ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } from 'discord.js';
 
-const data = new SlashCommandBuilder()
+export const data = new SlashCommandBuilder()
     .setName('answer')
     .setDescription('Provide an answer to a question');
 
-const execute = async (interaction) => {
+export const execute = async (interaction) => {
     const modal = new ModalBuilder()
         .setCustomId('myModal')
         .setTitle('My Modal');
@@ -30,9 +24,4 @@ const execute = async (interaction) => {
 
     modal.addComponents(firstActionRow, secondActionRow);
     await interaction.showModal(modal);
-};
-
-module.exports = {
-    data: data,
-    execute: execute,
 };

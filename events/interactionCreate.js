@@ -1,17 +1,12 @@
-const { Collection } = require('discord.js');
+import { Collection } from 'discord.js';
 
-const execute = async (interaction) => {
+export const execute = async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
 
-    const command = interaction.client.commands.get(
-        interaction.commandName
-    );
+    const command = interaction.client.commands.get(interaction.commandName);
 
     if (!command) {
-        console.error(
-            `No command matching ${interaction.commandName} was found.`
-        );
-        return;
+        return console.error(`No command matching ${interaction.commandName} was found.`);
     }
 
     const cooldowns = interaction.client.cooldowns;
@@ -47,13 +42,9 @@ const execute = async (interaction) => {
     try {
         await command.execute(interaction);
     } catch (error) {
-        console.error(`Error executing ${interaction.commandName}`);
-        console.error(error);
+        console.error(`Error executing ${interaction.commandName}. \n${error}`);
     }
 };
 
-module.exports = {
-    name: 'interactionCreate',
-    once: false,
-    execute,
-};
+export const name = 'interactionCreate';
+export const once = false;

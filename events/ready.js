@@ -1,16 +1,13 @@
-const { SpotifyExtractor, SoundCloudExtractor } = require('@discord-player/extractor');
-const { useMasterPlayer } = require("discord-player");
-const { Events } = require("discord.js");
+import { SpotifyExtractor } from '@discord-player/extractor';
+import { useMasterPlayer } from "discord-player";
+import { Events } from "discord.js";
 
-const execute = async (client) => {
+export const execute = async (client) => {
     const player = useMasterPlayer();
 
     await player.extractors.register(SpotifyExtractor, {});
     console.log(`Logged in as ${client.user.tag}!`);
 };
 
-module.exports = {
-    name: Events.ClientReady,
-    once: true,
-    execute,
-};
+export const name = Events.ClientReady;
+export const once = true;
