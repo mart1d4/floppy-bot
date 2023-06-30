@@ -16,13 +16,14 @@ const data = new SlashCommandBuilder()
 const execute = (interaction) => {
     const volume = interaction.options.getInteger('percentage', true);
 
-    const queue = useQueue(interaction.guild.id);
+    const queue = interaction.guild ? useQueue(interaction.guild.id) : null;
+    const icon = interaction.guild ? interaction.guild.iconURL() : interaction.client.user.avatarURL();
 
     if (!queue || !queue.isPlaying()) {
         const embed = new EmbedBuilder()
             .setAuthor({
                 name: '|  No music is currently playing',
-                iconURL: interaction.guild.iconURL()
+                iconURL: icon
             })
             .setColor(0xFEE75C);
 
@@ -34,7 +35,7 @@ const execute = (interaction) => {
     const embed = new EmbedBuilder()
         .setAuthor({
             name: interaction.guild.name,
-            iconURL: interaction.guild.iconURL()
+            iconURL: icon
         })
         .setTitle('Music Player')
         .setDescription(`Volume set to \`${volume}%\``);

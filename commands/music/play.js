@@ -16,13 +16,14 @@ const data = new SlashCommandBuilder()
 const execute = async (interaction) => {
     await interaction.deferReply({ ephemeral: true });
 
-    const channel = interaction.member.voice.channel;
+    const channel = interaction.member?.voice?.channel;
+    const icon = interaction.guild ? interaction.guild.iconURL() : interaction.client.user.avatarURL();
 
     if (!channel) {
         const embed = new EmbedBuilder()
             .setAuthor({
                 name: '|  You are not connected to a voice channel',
-                iconURL: interaction.guild.iconURL()
+                iconURL: icon
             })
             .setColor(0xFEE75C);
 

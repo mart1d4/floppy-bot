@@ -12,11 +12,13 @@ const execute = async (interaction) => {
     const queue = useQueue(interaction.guild?.id);
     const lyricsFinder = lyricsExtractor(/* 'optional genius API key' */);
 
+    const icon = interaction.guild ? interaction.guild.iconURL() : interaction.client.user.avatarURL();
+
     if (!song && !queue?.currentTrack) {
         const embed = new EmbedBuilder()
             .setAuthor({
                 name: '|  No music is currently playing',
-                iconURL: interaction.guild ? interaction.guild.iconURL() : interaction.client.user.avatarURL()
+                iconURL: icon
             })
             .setDescription('You can specify a song to get lyrics for.')
             .setColor(0xFEE75C);
@@ -37,7 +39,7 @@ const execute = async (interaction) => {
         const embed = new EmbedBuilder()
             .setAuthor({
                 name: '|  No lyrics found for this song',
-                iconURL: interaction.guild.iconURL()
+                iconURL: icon
             })
             .setColor(0xFEE75C);
 
