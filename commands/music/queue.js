@@ -1,19 +1,19 @@
-import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import { SlashCommandBuilder, EmbedBuilder } from "discord.js";
 import { useQueue } from "discord-player";
 
 export const data = new SlashCommandBuilder()
-    .setName('queue')
-    .setDescription('Get the current queue')
+    .setName("queue")
+    .setDescription("Get the current queue")
     .setDMPermission(false);
 
 export const execute = async (interaction) => {
     if (!interaction.member?.voice?.channel) {
         const embed = new EmbedBuilder()
             .setAuthor({
-                name: '|  You must be in a voice channel to use this command',
-                iconURL: interaction.guild.iconURL()
+                name: "|  You must be in a voice channel to use this command",
+                iconURL: interaction.guild.iconURL(),
             })
-            .setColor(0xFEE75C);
+            .setColor(0xfee75c);
 
         return interaction.reply({ embeds: [embed] });
     }
@@ -24,9 +24,9 @@ export const execute = async (interaction) => {
         const embed = new EmbedBuilder()
             .setAuthor({
                 name: `|  No music is currently playing`,
-                iconURL: interaction.guild.iconURL()
+                iconURL: interaction.guild.iconURL(),
             })
-            .setColor(0xFEE75C);
+            .setColor(0xfee75c);
 
         return interaction.reply({ embeds: [embed] });
     }
@@ -38,7 +38,7 @@ export const execute = async (interaction) => {
     const embed = new EmbedBuilder()
         .setAuthor({
             name: interaction.guild.name,
-            iconURL: interaction.guild.iconURL()
+            iconURL: interaction.guild.iconURL(),
         })
         .setThumbnail(currentTrack.thumbnail)
         .setTitle(`Queue - ${tracks.length} tracks - estimated time: ${queue.durationFormatted}`)
@@ -46,14 +46,15 @@ export const execute = async (interaction) => {
         .addFields(
             tracks.map((track, index) => ({
                 name: `${index + 1}. ${track.title}`,
-                value: `Requested by ${track.requestedBy?.username ?? 'Unknown'} | Duration: \`${track.duration}\` | [URL](${track.url})`
+                value: `Requested by ${track.requestedBy?.username ?? "Unknown"} | Duration: \`${
+                    track.duration
+                }\` | [URL](${track.url})`,
             }))
         )
         .setFooter({
             text: `Requested by ${interaction.member.user.username}`,
-            iconURL: interaction.member.user.avatarURL()
+            iconURL: interaction.member.user.avatarURL(),
         });
-
 
     return interaction.reply({ embeds: [embed] });
 };

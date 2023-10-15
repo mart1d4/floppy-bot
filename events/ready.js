@@ -1,4 +1,4 @@
-import { SpotifyExtractor } from '@discord-player/extractor';
+import { SpotifyExtractor } from "@discord-player/extractor";
 import { useMasterPlayer } from "discord-player";
 import { Events } from "discord.js";
 

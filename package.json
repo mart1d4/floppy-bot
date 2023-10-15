@@ -26,15 +26,10 @@
     },
     "license": "MIT",
     "dependencies": {
-        "@discord-player/extractor": "^4.2.2",
-        "@discordjs/opus": "^0.9.0",
-        "@discordjs/voice": "^0.16.0",
-        "discord-player": "^6.3.1",
+        "discord-player": "^6.6.4",
         "discord.js": "^14.7.1",
         "dotenv": "^16.0.3",
-        "node-opus": "^0.3.3",
-        "opusscript": "^0.0.8",
-        "sodium": "^3.0.2",
-        "ytdl-core": "^4.11.4"
+        "mediaplex": "^0.0.8",
+        "youtube-ext": "^1.1.14"
     }
 }

@@ -1,9 +1,9 @@
-import { Client, Collection, GatewayIntentBits, Partials, ActivityType } from 'discord.js';
-import { listener } from './events/musicPlayer.js';
+import { Client, Collection, GatewayIntentBits, Partials, ActivityType } from "discord.js";
+import { listener } from "./events/musicPlayer.js";
 import { Player } from "discord-player";
-import { readdirSync } from 'node:fs';
-import { join } from 'node:path';
-import 'dotenv/config'
+import { readdirSync } from "node:fs";
+import { join } from "node:path";
+import "dotenv/config";
 
 const clientOptions = {
     intents: [
@@ -12,18 +12,18 @@ const clientOptions = {
         GatewayIntentBits.DirectMessages,
         GatewayIntentBits.MessageContent,
         GatewayIntentBits.GuildPresences,
-        GatewayIntentBits.GuildVoiceStates
+        GatewayIntentBits.GuildVoiceStates,
     ],
     presence: {
-        status: 'online',
+        status: "online",
         activities: [
             {
-                name: 'Taking care of you',
+                name: "Taking care of you",
                 type: ActivityType.Playing,
             },
         ],
     },
-    partials: [Partials.Channel]
+    partials: [Partials.Channel],
 };
 
 const client = new Client(clientOptions);
@@ -33,8 +33,8 @@ const player = Player.singleton(client);
 listener(player);
 
 // Events
-const eventsPath = join(process.cwd(), 'events');
-const eventFiles = readdirSync(eventsPath).filter((file) => file.endsWith('.js') || file.endsWith('.ts'));
+const eventsPath = join(process.cwd(), "events");
+const eventFiles = readdirSync(eventsPath).filter((file) => file.endsWith(".js") || file.endsWith(".ts"));
 
 for (const file of eventFiles) {
     const url = `file:///${join(eventsPath, file)}`;
@@ -51,12 +51,12 @@ for (const file of eventFiles) {
 client.commands = new Collection();
 client.cooldowns = new Collection();
 
-const foldersPath = join(process.cwd(), 'commands');
+const foldersPath = join(process.cwd(), "commands");
 const commandFolders = readdirSync(foldersPath);
 
 for (const folder of commandFolders) {
     const commandsPath = join(foldersPath, folder);
-    const commandFiles = readdirSync(commandsPath).filter(file => file.endsWith('.js') || file.endsWith('.ts'));
+    const commandFiles = readdirSync(commandsPath).filter((file) => file.endsWith(".js") || file.endsWith(".ts"));
 
     for (const file of commandFiles) {
         const url = `file:///${join(commandsPath, file)}`;
@@ -70,5 +70,5 @@ for (const folder of commandFolders) {
     }
 }
 
-client.login(process.env.TOKEN);
+client.login(process.env.CLIENT_TOKEN);
 export default client;

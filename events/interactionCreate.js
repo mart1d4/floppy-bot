@@ -1,8 +1,7 @@
-import { Collection } from 'discord.js';
+import { Collection } from "discord.js";
 
 export const execute = async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
-
     const command = interaction.client.commands.get(interaction.commandName);
 
     if (!command) {
@@ -31,7 +30,7 @@ export const execute = async (interaction) => {
                     Please wait, you are on a cooldown for \`${command.data.name}\`.
                     You can use it again <t:${expiredTimestamp}:R>.
                 `,
-                ephemeral: true
+                ephemeral: true,
             });
         }
     }
@@ -46,5 +45,5 @@ export const execute = async (interaction) => {
     }
 };
 
-export const name = 'interactionCreate';
+export const name = "interactionCreate";
 export const once = false;

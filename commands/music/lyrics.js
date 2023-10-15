@@ -1,19 +1,23 @@
-import { SlashCommandBuilder, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, ComponentType } from 'discord.js';
-import { lyricsExtractor } from '@discord-player/extractor';
+import { lyricsExtractor } from "@discord-player/extractor";
 import { useQueue } from "discord-player";
+import {
+    SlashCommandBuilder,
+    EmbedBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+    ActionRowBuilder,
+    ComponentType,
+} from "discord.js";
 
 export const data = new SlashCommandBuilder()
-    .setName('lyrics')
-    .setDescription('Get lyrics for the current song, or a song of your choice')
+    .setName("lyrics")
+    .setDescription("Get lyrics for the current song, or a song of your choice")
     .addStringOption((option) =>
-        option
-            .setName('song')
-            .setDescription('The song to get lyrics for')
-            .setRequired(false)
+        option.setName("song").setDescription("The song to get lyrics for").setRequired(false)
     );
 
 export const execute = async (interaction) => {
-    const song = interaction.options.getString('song') ?? null;
+    const song = interaction.options.getString("song") ?? null;
     const queue = useQueue(interaction.guild?.id);
     const lyricsFinder = lyricsExtractor(/* 'optional genius API key' */);
 
@@ -22,20 +26,18 @@ export const execute = async (interaction) => {
     if (!song && !queue?.currentTrack) {
         const embed = new EmbedBuilder()
             .setAuthor({
-                name: '|  No music is currently playing',
-                iconURL: icon
+                name: "|  No music is currently playing",
+                iconURL: icon,
             })
-            .setDescription('You can specify a song to get lyrics for.')
-            .setColor(0xFEE75C);
+            .setDescription("You can specify a song to get lyrics for.")
+            .setColor(0xfee75c);
 
         return interaction.reply({ embeds: [embed] });
     }
 
     await interaction.deferReply();
 
-    const lyrics = await lyricsFinder.search(
-        song ?? queue.currentTrack.title,
-    ).catch((e) => {
+    const lyrics = await lyricsFinder.search(song ?? queue.currentTrack.title).catch((e) => {
         console.log(e);
         return null;
     });
@@ -43,10 +45,10 @@ export const execute = async (interaction) => {
     if (!lyrics) {
         const embed = new EmbedBuilder()
             .setAuthor({
-                name: '|  No lyrics found for this song',
-                iconURL: icon
+                name: "|  No lyrics found for this song",
+                iconURL: icon,
             })
-            .setColor(0xFEE75C);
+            .setColor(0xfee75c);
 
         return interaction.editReply({ embeds: [embed] });
     }
@@ -67,38 +69,34 @@ export const execute = async (interaction) => {
         .setAuthor({
             name: lyrics.artist.name,
             iconURL: lyrics.artist.image,
-            url: lyrics.artist.url
+            url: lyrics.artist.url,
         })
         .setDescription(index === strings.length - 1 ? strings[index] : `${strings[index]}...`)
-        .setColor(0x5865F2);
+        .setColor(0x5865f2);
 
     if (strings.length > 1) {
         const previous = new ButtonBuilder()
-            .setCustomId('previous')
-            .setLabel('Previous Page')
+            .setCustomId("previous")
+            .setLabel("Previous Page")
             .setStyle(ButtonStyle.Secondary)
             .setDisabled(true);
 
-        const next = new ButtonBuilder()
-            .setCustomId('next')
-            .setLabel('Next Page')
-            .setStyle(ButtonStyle.Secondary);
+        const next = new ButtonBuilder().setCustomId("next").setLabel("Next Page").setStyle(ButtonStyle.Secondary);
 
-        const row = new ActionRowBuilder()
-            .addComponents(previous, next);
+        const row = new ActionRowBuilder().addComponents(previous, next);
 
         const response = await interaction.editReply({ embeds: [embed], components: [row] });
 
         try {
             const collector = response.createMessageComponentCollector({
                 componentType: ComponentType.Button,
-                time: 3_600_000
+                time: 3_600_000,
             });
 
-            collector.on('collect', async (button) => {
-                if (button.customId === 'previous') {
+            collector.on("collect", async (button) => {
+                if (button.customId === "previous") {
                     index--;
-                } else if (button.customId === 'next') {
+                } else if (button.customId === "next") {
                     index++;
                 }
 
@@ -118,11 +116,11 @@ export const execute = async (interaction) => {
             console.log(e);
             const embed = new EmbedBuilder()
                 .setAuthor({
-                    name: '|  An error occurred',
-                    iconURL: interaction.guild.iconURL()
+                    name: "|  An error occurred",
+                    iconURL: interaction.guild.iconURL(),
                 })
-                .setDescription('An error occurred while trying to paginate the lyrics.')
-                .setColor(0xED4245);
+                .setDescription("An error occurred while trying to paginate the lyrics.")
+                .setColor(0xed4245);
 
             return interaction.editReply({ embeds: [embed], components: [] });
         }

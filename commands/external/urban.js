@@ -1,12 +1,12 @@
-import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import { SlashCommandBuilder, EmbedBuilder } from "discord.js";
 
 export const data = new SlashCommandBuilder()
-    .setName('urban')
-    .setDescription('Searches Urban Dictionary for a term')
+    .setName("urban")
+    .setDescription("Searches Urban Dictionary for a term")
     .addStringOption((option) =>
         option
-            .setName('term')
-            .setDescription('The term to search for')
+            .setName("term")
+            .setDescription("The term to search for")
             .setMinLength(1)
             .setMaxLength(100)
             .setRequired(true)
@@ -15,19 +15,19 @@ export const data = new SlashCommandBuilder()
 export const execute = async (interaction) => {
     await interaction.deferReply();
 
-    const term = interaction.options.getString('term');
+    const term = interaction.options.getString("term");
 
-    const { list } = await fetch(
-        `https://api.urbandictionary.com/v0/define?term=${term}`
-    ).then((response) => response.json());
+    const { list } = await fetch(`https://api.urbandictionary.com/v0/define?term=${term}`).then((response) =>
+        response.json()
+    );
 
     if (!list.length) {
         const embed = new EmbedBuilder()
             .setAuthor({
-                name: '|  No results found',
+                name: "|  No results found",
                 iconURL: interaction.guild.iconURL(),
             })
-            .setColor(0xFEE75C);
+            .setColor(0xfee75c);
 
         return await interaction.editReply({ embeds: [embed] });
     }
@@ -37,10 +37,10 @@ export const execute = async (interaction) => {
     if (!answer) {
         const embed = new EmbedBuilder()
             .setAuthor({
-                name: '|  No results found',
+                name: "|  No results found",
                 iconURL: interaction.guild.iconURL(),
             })
-            .setColor(0xFEE75C);
+            .setColor(0xfee75c);
 
         return await interaction.editReply({ embeds: [embed] });
     }
@@ -52,30 +52,28 @@ export const execute = async (interaction) => {
         })
         .setURL(answer.permalink)
         .setThumbnail(
-            'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Urban_Dictionary_logo.svg/1200px-Urban_Dictionary_logo.svg.png'
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Urban_Dictionary_logo.svg/1200px-Urban_Dictionary_logo.svg.png"
         )
         .setDescription(
-            `${answer.definition.length > 1024
-                ? `${answer.definition.substring(0, 1021)}...`
-                : answer.definition
-            }`
+            `${answer.definition.length > 1024 ? `${answer.definition.substring(0, 1021)}...` : answer.definition}`
         )
         .addFields(
             {
-                name: 'Example',
-                value: `${answer.example.length > 1024
-                    ? `${answer.example.substring(0, 1021)}...`
-                    : answer.example || 'No example'
-                    }`,
+                name: "Example",
+                value: `${
+                    answer.example.length > 1024
+                        ? `${answer.example.substring(0, 1021)}...`
+                        : answer.example || "No example"
+                }`,
                 inline: false,
             },
             {
-                name: '👍',
+                name: "👍",
                 value: `${answer.thumbs_up}`,
                 inline: true,
             },
             {
-                name: '👎',
+                name: "👎",
                 value: `${answer.thumbs_down}`,
                 inline: true,
             }
@@ -84,7 +82,7 @@ export const execute = async (interaction) => {
             text: `Written by ${answer.author}`,
         })
         .setTimestamp(new Date(answer.written_on))
-        .setColor(0x5865F2);
+        .setColor(0x5865f2);
 
     await interaction.editReply({ embeds: [embed] });
 };

@@ -1,38 +1,34 @@
-import { SlashCommandBuilder, EmbedBuilder, ChannelType, PermissionFlagsBits } from 'discord.js';
+import { SlashCommandBuilder, EmbedBuilder, ChannelType, PermissionFlagsBits } from "discord.js";
 
 export const data = new SlashCommandBuilder()
-    .setName('delete')
-    .setDescription('Deletes the specified number of messages. Messages older than 2 weeks cannot be deleted.')
+    .setName("delete")
+    .setDescription("Deletes the specified number of messages. Messages older than 2 weeks cannot be deleted.")
     .addIntegerOption((option) =>
         option
-            .setName('number')
-            .setDescription('The number of messages to delete. Defaults to 1.')
+            .setName("number")
+            .setDescription("The number of messages to delete. Defaults to 1.")
             .setMinValue(1)
             .setMaxValue(500)
             .setRequired(false)
     )
     .addChannelOption((option) =>
         option
-            .setName('channel')
-            .setDescription(
-                'The channel to delete messages from. Defaults to the current channel.'
-            )
+            .setName("channel")
+            .setDescription("The channel to delete messages from. Defaults to the current channel.")
             .addChannelTypes(ChannelType.GuildText)
             .setRequired(false)
     )
     .addUserOption((option) =>
         option
-            .setName('user')
-            .setDescription(
-                'The user to delete messages from. Defaults to all users.'
-            )
+            .setName("user")
+            .setDescription("The user to delete messages from. Defaults to all users.")
             .setRequired(false)
     )
     .addBooleanOption((option) =>
         option
-            .setName('all')
+            .setName("all")
             .setDescription(
-                'Whether or not to delete all messages in the channel. Only deletes messages by a user if specified.'
+                "Whether or not to delete all messages in the channel. Only deletes messages by a user if specified."
             )
             .setRequired(false)
     )
@@ -44,11 +40,11 @@ export const execute = async (interaction) => {
     let i = 0;
     let newChannel = null;
     const options = interaction.options;
-    let amount = options.getInteger('number') ?? 1;
-    const channel = options.getChannel('channel') ?? interaction.channel;
+    let amount = options.getInteger("number") ?? 1;
+    const channel = options.getChannel("channel") ?? interaction.channel;
     const isDM = channel.type == 1;
-    const user = options.getUser('user') ?? null;
-    const all = options.getBoolean('all') ?? false;
+    const user = options.getUser("user") ?? null;
+    const all = options.getBoolean("all") ?? false;
 
     const sendError = (error) => {
         const embed = new EmbedBuilder()
@@ -56,7 +52,7 @@ export const execute = async (interaction) => {
                 name: `|  Error - ${error}`,
                 iconURL: interaction.guild.iconURL(),
             })
-            .setColor(0xED4245);
+            .setColor(0xed4245);
 
         interaction.editReply({ embeds: [embed] });
     };
@@ -67,22 +63,22 @@ export const execute = async (interaction) => {
                 name: `|  ${message}`,
                 iconURL: interaction.guild.iconURL(),
             })
-            .setColor(0x57F287);
+            .setColor(0x57f287);
 
         interaction.editReply({ embeds: [embed] });
     };
 
     if (isDM) {
-        sendError('You cannot delete messages in a DM');
+        sendError("You cannot delete messages in a DM");
         return;
     }
 
     if (all) {
         if (isDM) {
-            sendError('You cannot delete all messages in a DM');
+            sendError("You cannot delete all messages in a DM");
             return;
         } else if (user) {
-            sendError('You cannot delete all messages by a user');
+            sendError("You cannot delete all messages by a user");
             return;
         }
 
@@ -94,7 +90,7 @@ export const execute = async (interaction) => {
                 name: `|  Successfully deleted all messages in #${newChannel.name}`,
                 iconURL: interaction.guild.iconURL(),
             })
-            .setColor(0x57F287);
+            .setColor(0x57f287);
 
         return newChannel.send({ embeds: [embed] });
     }
@@ -112,9 +108,7 @@ export const execute = async (interaction) => {
 
                 i += numberDeleted;
             } else {
-                const filteredMessages = messages.filter(
-                    (message) => message.author.id == user.id
-                );
+                const filteredMessages = messages.filter((message) => message.author.id == user.id);
 
                 if (filteredMessages.size == 0) {
                     amount = i;
@@ -157,10 +151,10 @@ export const execute = async (interaction) => {
         }
 
         return sendSuccess(
-            `Successfully deleted ${amount} message${amount == 1 ? '' : 's'}${user ? ` by ${user.username}` : ''}`
+            `Successfully deleted ${amount} message${amount == 1 ? "" : "s"}${user ? ` by ${user.username}` : ""}`
         );
     } catch (error) {
         console.error(error);
-        return sendError('An error occurred while deleting messages');
+        return sendError("An error occurred while deleting messages");
     }
 };
